@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 
+column_rename_mapping = dict(zip(['creatinine_phosphokinase', "platelets", "ejection_fraction", "high_blood_pressure", "serum_creatinine", "serum_sodium", "DEATH_EVENT"],
+                                 ["cp", "ptls", "ef", "hbp", "sc", "ss", "death"]))
 
 def create_plot(plot: str, series: pd.Series, source='seaborn'):
     fig, ax = plt.subplots()
@@ -44,3 +46,10 @@ def box_stripplot(data):
     sns.boxplot(y=data, showfliers=True)
     sns.stripplot(y=data, color='black')
     plt.show()
+
+
+def corrfunc(x, y, ax=None, **kws):
+    """Plot the correlation coefficient in the top left hand corner of a plot."""
+    r, _ = pearsonr(x, y)
+    ax = ax or plt.gca()
+    ax.annotate(f'ρ = {r:.2f}', xy=(.1, .9), xycoords=ax.transAxes)

@@ -67,3 +67,30 @@ class Explorer:
                 print('____________________________________________________________')
                 print('____________________________________________________________')
                 print('____________________________________________________________')
+
+    def visualize_variable_relationship(self, data: pd.DataFrame , columns: List = None, mode: str = 'all_predictors'):
+        """
+        We need to visualize relationships:
+        a. Between two predictors
+        b. Between more than two predictors
+        c. Between as many predictors as we want and the target variable, depending on the type of the predictor (categorical or continuous)
+        :param mode: Defines the mode of the desired visualization
+        :param data: DataFrame to perform the visualization on
+        :param columns: Desired selected columns to use
+        """
+        if columns is None:
+            pass
+        else:
+            data = data.loc[:, columns]
+
+
+        if mode=="all_predictors":
+            corr=data.corr()
+            ax1 = sns.heatmap(
+                corr,
+                vmin=-1, vmax=1, center=0,
+                cmap=sns.diverging_palette(20, 220, n=200),
+                square=True
+            )
+            ax2 = sns.pairplot(data, corner = True).map_lower(corrfunc)
+            plt.show()
