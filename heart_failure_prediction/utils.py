@@ -2,16 +2,19 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy
+from scipy.stats import pearsonr
 
-column_rename_mapping = dict(zip(['creatinine_phosphokinase', "platelets", "ejection_fraction", "high_blood_pressure", "serum_creatinine", "serum_sodium", "DEATH_EVENT"],
-                                 ["cp", "ptls", "ef", "hbp", "sc", "ss", "death"]))
+def get_key(my_dict, val):
+    for key, value in my_dict.items():
+        if val == value:
+            return key
+    return "key doesn't exist"
 
 def create_plot(plot: str, series: pd.Series, source='seaborn'):
     fig, ax = plt.subplots()
     if source == 'seaborn':
         sns.set_theme(style='whitegrid')
-        plot_mapping = {'distplot': 'sns.distplot(x=series, ax=ax)',
+        plot_mapping = {'displot': 'sns.displot(x=series, ax=ax)',
                         'boxplot': 'sns.boxplot(y=series, ax=ax)',
                         'violinplot': 'sns.violinplot(x=series, ax=ax)',
                         'qqplot': "scipy.stats.probplot(series, dist='norm', plot=plt)"
