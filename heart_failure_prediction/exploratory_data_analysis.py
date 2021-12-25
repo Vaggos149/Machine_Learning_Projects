@@ -1,9 +1,9 @@
-import objects
-import utils
+from objects import Importer, Explorer
 import settings
+
 # Defining needed Classes
-importer = objects.Importer()
-explorer = objects.Explorer()
+importer = Importer()
+explorer = Explorer()
 #importing dataset
 data = importer.import_dataset('original_dataset')
 #renaming columns

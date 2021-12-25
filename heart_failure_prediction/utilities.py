@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import pearsonr
+import scipy
 
 def get_key(my_dict, val):
     for key, value in my_dict.items():
@@ -14,7 +15,7 @@ def create_plot(plot: str, series: pd.Series, source='seaborn'):
     fig, ax = plt.subplots()
     if source == 'seaborn':
         sns.set_theme(style='whitegrid')
-        plot_mapping = {'displot': 'sns.displot(x=series, ax=ax)',
+        plot_mapping = {'displot': 'sns.histplot(x=series, ax=ax)',
                         'boxplot': 'sns.boxplot(y=series, ax=ax)',
                         'violinplot': 'sns.violinplot(x=series, ax=ax)',
                         'qqplot': "scipy.stats.probplot(series, dist='norm', plot=plt)"

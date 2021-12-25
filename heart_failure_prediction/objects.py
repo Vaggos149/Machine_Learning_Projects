@@ -1,25 +1,28 @@
-import utils
+import utilities
 import pandas as pd
 import matplotlib.pyplot as plt
 from typing import Union, List, Dict
 import seaborn as sns
 
+
 class Importer:
     def __init__(self):
         self.__name = 'Importer'
-        self._mapping_file = {'original_dataset': 'heart_failure_clinical_records_dataset.csv'}
+        self._mapping_dataset_name = {'original_dataset': 'heart_failure_clinical_records_dataset.csv'}
+        self.data_file_path = './data'
 
-    def import_dataset(self, dataset):
-        path = './data/{}'.format(self._mapping_file[dataset])
-        dataframe_to_return = pd.read_csv(path)
-        return dataframe_to_return
+    def import_dataset(self, dataset_name):
+        path = self.data_file_path + '/{}'.format(self._mapping_dataset_name[dataset_name])
+        imported_dataset = pd.read_csv(path)
+        return imported_dataset
 
 
 class Explorer:
     def __init__(self):
-        self.__name='Explorer'
+        self.__name = 'Explorer'
 
-    def main_info(self, dataset):
+    @staticmethod
+    def main_info(dataset):
         pd.set_option('display.max_columns', None)
         print('dataset.info()')
         print(dataset.info())
@@ -39,12 +42,13 @@ class Explorer:
         print('____________________________________________________________')
         pd.reset_option('display')
 
-    def visualize_distribution(self, series: pd.Series, source='seaborn', list_of_plots: List = None):
+    @staticmethod
+    def visualize_distribution(series: pd.Series, source='seaborn', list_of_plots: List = None):
         if list_of_plots is None:
             list_of_plots = ['displot', 'boxplot', 'violinplot', 'qqplot']
 
         for plot in list_of_plots:
-            utils.create_plot(plot, series, source=source)
+            utilities.create_plot(plot, series, source=source)
             plt.show()
 
     def quantify_missing(self, dataset):
@@ -55,22 +59,24 @@ class Explorer:
         print(dataset.isnull().mean())
 
     def visualize_outliers(self, data: Union[pd.Series, pd.DataFrame], list_of_columns: List = None, boundary_multiplier: float = 1.5, plot_selection: str = 'violin'):
-        if list_of_columns is None:
+        if list_of_coylumns is None:
             plot_mapping = {'violin': 'violin_stripplot(data)',
                             'box': 'box_stripplot(data)'
                             }
-            utils.IQR_calculation(data, boundary_multiplier=boundary_multiplier)
+            utilities.IQR_calculation(data, boundary_multiplier=boundary_multiplier)
             exec(plot_mapping[plot_selection])
         else:
             for column in list_of_columns:
-                print('COLUMN: {}'.format(column))
-                utils.IQR_calculation(data[column], boundary_multiplier=boundary_multiplier)
-                print('____________________________________________________________')
+                priint('COLUMN: {}'.format(column))
+                utilities.IQR_calculation(data[column], boundary_multiplier=boundary_multiplier)
+                prnt('____________________________________________________________')
                 print('____________________________________________________________')
                 print('____________________________________________________________')
 
-    def visualize_variable_relationship(self, data: pd.DataFrame, columns: List = None,
-                                        mode: str = None, selected_variables: Dict = None,
+    def visualize_variable_relationship(self, data: pd.DataFrame,
+                                        columns: List = None,
+                                        mode: str = None,
+                                        selected_variables: Dict = None,
                                         hue=None):
         """
         We need to visualize relationships:
@@ -98,7 +104,7 @@ class Explorer:
                 cmap=sns.diverging_palette(20, 220, n=200),
                 square=True
             )
-            ax2 = sns.pairplot(data, corner=True).map_lower(utils.corrfunc)
+            ax2 = sns.pairplot(data, corner=True).map_lower(utilities.corrfunc)
             plt.show()
 
         elif mode == "pair_of_predictors":
@@ -121,8 +127,8 @@ class Explorer:
                                   hue=hue,  kind='point', data=data)
                 plt.show()
             else:
-                continuous_variable = utils.get_key(selected_variables, 'continuous')
-                categorical_variable = utils.get_key(selected_variables, 'categorical')
+                continuous_variable = utilities.get_key(selected_variables, 'continuous')
+                categorical_variable = utilities.get_key(selected_variables, 'categorical')
                 ax1 = sns.catplot(x=categorical_variable, y=continuous_variable, hue=hue,
                                   kind='box', dodge=False, data=data)
                 ax2 = sns.catplot(x=categorical_variable, y=continuous_variable, hue=hue,
