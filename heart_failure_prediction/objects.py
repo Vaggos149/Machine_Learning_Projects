@@ -2,15 +2,15 @@ import utilities
 import pandas as pd
 import matplotlib.pyplot as plt
 from typing import Union, List, Dict
-import numpy as np
 import seaborn as sns
+from settings import *
 
 
 class Importer:
     def __init__(self):
         self.__name = 'Importer'
         self._mapping_dataset_name = {'original_dataset': 'heart_failure_clinical_records_dataset.csv'}
-        self.data_file_path = './data'
+        self.data_file_path = main_project_path + './data'
 
     def import_dataset(self, dataset_name):
         path = self.data_file_path + '/{}'.format(self._mapping_dataset_name[dataset_name])
@@ -91,9 +91,6 @@ class Explorer:
             except TypeError:
                 print(f'Column {column} is of a DataType which is inappropriate for IQR calculation..Skipping calculation for this column')
                 pass
-            print('____________________________________________________________')
-            print('____________________________________________________________')
-            print('____________________________________________________________')
             if plot_selection is None:
                 pass
             else:
@@ -105,6 +102,8 @@ class Explorer:
                 except TypeError:
                     print(f'Column {column} cannot reproduce the plot of your choice...'
                           f'Please, make sure you select appropriate selections of columns-plots')
+            print('____________________________________________________________')
+            print('____________________________________________________________')
             print('____________________________________________________________')
 
     @staticmethod
