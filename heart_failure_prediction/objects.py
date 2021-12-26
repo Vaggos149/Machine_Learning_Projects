@@ -2,6 +2,7 @@ import utilities
 import pandas as pd
 import matplotlib.pyplot as plt
 from typing import Union, List, Dict
+import numpy as np
 import seaborn as sns
 
 
@@ -20,6 +21,11 @@ class Importer:
 class Explorer:
     def __init__(self):
         self.__name = 'Explorer'
+        self.list_of_plots_distribution_visualization = ['displot', 'boxplot', 'violinplot', 'qqplot']
+        self.outlier_visualization_plot_mapping = {'violin': 'utilities.violin_stripplot(colname=column, data=data)',
+                                                   'box': 'utilities.box_stripplot(colname=column, data=data)'
+                                                   }
+        self.outlier_boundary_multiplier = 1.5
 
     @staticmethod
     def main_info(dataset):
@@ -42,62 +48,94 @@ class Explorer:
         print('____________________________________________________________')
         pd.reset_option('display')
 
-    @staticmethod
-    def visualize_distribution(series: pd.Series, source='seaborn', list_of_plots: List = None):
+    def visualize_variable_distribution(self,
+                               series: pd.Series,
+                               list_of_plots: List = None):
+        plt.close('all')  # closing all existing plots to avoid figure overriding
+
         if list_of_plots is None:
-            list_of_plots = ['displot', 'boxplot', 'violinplot', 'qqplot']
+            list_of_plots = self.list_of_plots_distribution_visualization
 
         for plot in list_of_plots:
-            utilities.create_plot(plot, series, source=source)
+            utilities.create_plot(plot, series)
             plt.show()
 
-    def quantify_missing(self, dataset):
+    @staticmethod
+    def quantify_missing(dataset):
         print('Number of Missing Values per variable')
         print(dataset.isnull().sum())
         print('______________________________________________________')
         print('Percentage of Missing Values per variable')
         print(dataset.isnull().mean())
 
-    def visualize_outliers(self, data: Union[pd.Series, pd.DataFrame], list_of_columns: List = None, boundary_multiplier: float = 1.5, plot_selection: str = 'violin'):
-        if list_of_coylumns is None:
-            plot_mapping = {'violin': 'violin_stripplot(data)',
-                            'box': 'box_stripplot(data)'
-                            }
-            utilities.IQR_calculation(data, boundary_multiplier=boundary_multiplier)
-            exec(plot_mapping[plot_selection])
-        else:
-            for column in list_of_columns:
-                priint('COLUMN: {}'.format(column))
-                utilities.IQR_calculation(data[column], boundary_multiplier=boundary_multiplier)
-                prnt('____________________________________________________________')
-                print('____________________________________________________________')
-                print('____________________________________________________________')
+    def visualize_outliers(self,
+                           data: Union[pd.Series, pd.DataFrame],
+                           list_of_columns: List = None,
+                           boundary_multiplier: float = None,
+                           plot_selection: str = None):
+        plt.close('all')  # closing all existing plots to avoid figure overriding
 
-    def visualize_variable_relationship(self, data: pd.DataFrame,
-                                        columns: List = None,
+        if boundary_multiplier is None:
+            boundary_multiplier = self.outlier_boundary_multiplier
+
+        if list_of_columns is None:  # if no list_of_columns is provided by the user, the code runs for the whole dataset
+            list_of_columns = list(data.columns)
+
+        if plot_selection is None:
+            print('No Plot Selection for outlier visualization was selected...Skipping plotting')
+
+        for column in list_of_columns:
+            print('COLUMN: {}'.format(column))
+            try:
+                utilities.iqr_calculation(data[column], boundary_multiplier=boundary_multiplier)
+            except TypeError:
+                print(f'Column {column} is of a DataType which is inappropriate for IQR calculation..Skipping calculation for this column')
+                pass
+            print('____________________________________________________________')
+            print('____________________________________________________________')
+            print('____________________________________________________________')
+            if plot_selection is None:
+                pass
+            else:
+                try:
+                    fig = plt.figure()
+                    fig.add_subplot()
+                    exec(self.outlier_visualization_plot_mapping[plot_selection])
+                    plt.show()
+                except TypeError:
+                    print(f'Column {column} cannot reproduce the plot of your choice...'
+                          f'Please, make sure you select appropriate selections of columns-plots')
+            print('____________________________________________________________')
+
+    @staticmethod
+    def visualize_variable_relationship(data: pd.DataFrame,
                                         mode: str = None,
-                                        selected_variables: Dict = None,
+                                        selected_variables_and_types_dict: Dict = None,
                                         hue=None):
         """
         We need to visualize relationships:
         a. Between two predictors
         b. Between more than two predictors
         c. Between as many predictors as we want and the target variable, depending on the type of the predictor (categorical or continuous)
-        :param mode: Defines the mode of the desired visualization. Available modes are [None,pair_of_predictors,target_predictors]
-        :param data: DataFrame to perform the visualization on
-        :param columns: Desired selected columns to use as keys, type 'continuous' or 'categorical' as values
-        :param size: Optional parameter 'size' for seaborn functionality
+        :param selected_variables_and_types_dict: Includes a Dictionary of selected_variables : {varName: type_of_var},
+                where type_of_var is either "continuous" or "categorical"
+        :param mode: Defines the mode of the desired visualization. Available modes are [multiple_variables,pair_of_variables]
+        :param data: DataFrame to perform the visualization
         :param hue: Optional parameter  'hue' for seaborn functionality
         """
-
+        plt.close('all')  # closing all existing plots to avoid figure overriding
         if mode is None:
-            if columns is None:
+            print("Mode is not selected. Printing for default plot mode: 'multiple_variables'")
+            mode = 'multiple_variables'
+
+        if mode is "multiple_variables":
+            if selected_variables_and_types_dict is None:
                 print('Columns parameter not provided: Visualizing for all variables in the dataset')
                 print('______________________________________________________________________________')
                 pass
             else:
-                data = data.loc[:, columns]
-            corr=data.corr()
+                data = data.loc[:, selected_variables_and_types_dict.keys()]
+            corr = data.corr()
             ax1 = sns.heatmap(
                 corr,
                 vmin=-1, vmax=1, center=0,
@@ -105,34 +143,40 @@ class Explorer:
                 square=True
             )
             ax2 = sns.pairplot(data, corner=True).map_lower(utilities.corrfunc)
-            plt.show()
 
-        elif mode == "pair_of_predictors":
-            if len(selected_variables)!=2:
+        elif mode == "pair_of_variables":
+            if len(selected_variables_and_types_dict) != 2:
                 raise Exception('selected_variables length does not match mode \'pair_of_variables\'. '
                                 'This mode requires the user to/'
                                 'provide a pair of variables - columns of the input dataframe as a list: e.g. [var1,var2]')
 
-            if all(variable_type == 'continuous' for variable_type in selected_variables.values()):
-                ax1 = sns.scatterplot(data=data, x=list(selected_variables.keys())[0], y=list(selected_variables.keys())[1],
+            if all(variable_type == 'continuous' for variable_type in selected_variables_and_types_dict.values()):
+                ax1 = sns.scatterplot(data=data,
+                                      x=list(selected_variables_and_types_dict.keys())[0],
+                                      y=list(selected_variables_and_types_dict.keys())[1],
                                       hue=hue)
                 plt.show()
-            elif all(variable_type == 'categorical' for variable_type in selected_variables.values()):
 
-                ax1 = sns.catplot(x=list(selected_variables.keys())[0], y=list(selected_variables.keys())[1],
-                                  hue=hue, kind='bar', data=data)
-                ax2 = sns.catplot(x=list(selected_variables.keys())[0], hue=list(selected_variables.keys())[1],
-                                  kind='count', data=data)
-                ax3 = sns.catplot(x=list(selected_variables.keys())[0], y=list(selected_variables.keys())[1],
-                                  hue=hue,  kind='point', data=data)
+            elif all(variable_type == 'categorical' for variable_type in selected_variables_and_types_dict.values()):
+                ax1 = sns.countplot(x=list(selected_variables_and_types_dict.keys())[0],
+                                    hue=list(selected_variables_and_types_dict.keys())[1],
+                                    data=data)
+
+                ax2 = (pd.crosstab(data[list(selected_variables_and_types_dict.keys())[0]],
+                                   data[list(selected_variables_and_types_dict.keys())[1]],
+                                   normalize='index'
+                                   ).plot.bar(stacked=True, rot=0)
+                       ).legend(loc=2)
                 plt.show()
+
             else:
-                continuous_variable = utilities.get_key(selected_variables, 'continuous')
-                categorical_variable = utilities.get_key(selected_variables, 'categorical')
+                continuous_variable = utilities.get_key(selected_variables_and_types_dict, 'continuous')
+                categorical_variable = utilities.get_key(selected_variables_and_types_dict, 'categorical')
                 ax1 = sns.catplot(x=categorical_variable, y=continuous_variable, hue=hue,
                                   kind='box', dodge=False, data=data)
                 ax2 = sns.catplot(x=categorical_variable, y=continuous_variable, hue=hue,
                                   kind='violin', dodge=False, data=data)
                 ax3 = sns.catplot(x=categorical_variable, y=continuous_variable, hue=hue,
                                   kind='swarm', dodge=False, data=data)
+
                 plt.show()
