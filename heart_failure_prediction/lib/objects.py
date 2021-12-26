@@ -1,4 +1,4 @@
-from settings.settings import main_project_path
+from config.settings import main_project_path
 from utils import utilities
 import pandas as pd
 import matplotlib.pyplot as plt
