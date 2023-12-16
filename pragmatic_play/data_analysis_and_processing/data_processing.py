@@ -14,21 +14,6 @@ test_data = testing_obj.read_dataframe_from_csv(csv_path_to_read="D:/Machine_Lea
 print("Train data info: {}".format(train_data.info()))
 print("Test_data info: {}".format(test_data.info()))
 
-# Visualize columns
-sns.lmplot(x="Age", y="Fare", data=train_data)
-sns.boxplot(data=train_data, x="Survived", y="Fare", hue="Pclass")
-plt.show()
-
-# Analyze data, write comments
-# OK, clear advantage for the rich, seems like the probability of surviving is dependent on your class...
-# women survive more
-# do children? Probably yes --> Seems like it doesnt, needs further checking for statistical significance
-# etc etc etc
-# mpourou mpourou sthn plateia koumoundourou
-
-
-# Replace null values
-# Pame ena replace na teleiwnoume
 
 # feature engineering
 # median imputation for aGE IS FINE,
