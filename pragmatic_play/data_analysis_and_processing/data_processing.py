@@ -1,7 +1,7 @@
-from pragmatic_play.lib.data_objects import TestingObject
+from pragmatic_play.lib.sources_sinks import IO
 
 mode = "test"
-testing_obj = TestingObject(mode=mode)
+testing_obj = IO(mode=mode)
 
 train_data = testing_obj.read_dataframe_from_csv(csv_path_to_read="D:/Machine_Learning_Projects/titanic_survival_classification/train_test_data/train.csv")
 test_data = testing_obj.read_dataframe_from_csv(csv_path_to_read="D:/Machine_Learning_Projects/titanic_survival_classification/train_test_data/test.csv")

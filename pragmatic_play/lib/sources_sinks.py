@@ -5,11 +5,14 @@ project_name = "pragmatic_play"
 user = "john_rocker"
 
 
-class TestingObject:
+class IO:
+    """
+    Defines the main object for reading / writing functionality
+    """
 
     def __init__(self, mode):
         self.mode = mode
-        self.writing_files_main_path = f"D:/Machine_Learning_Projects/pragmatic_play/writing_files"
+        self.main_sink = "D:/Machine_Learning_Projects/pragmatic_play/data_storage"
 
     @staticmethod
     def read_dataframe_from_csv(csv_path_to_read: str,
@@ -22,12 +25,12 @@ class TestingObject:
                                dataset: pd.DataFrame,
                                dataset_name: str = None):
 
-        dataset.to_csv(self.writing_files_main_path + f'/{dataset_name}.csv')
+        dataset.to_csv(self.main_sink + f'/{dataset_name}.csv')
 
     def save_model(self,
                    model,
                    model_name: str):
 
-        pickle.dump(model, open(self.writing_files_main_path + f'/{model_name}', 'wb'))
+        pickle.dump(model, open(self.main_sink + f'/{model_name}', 'wb'))
 
 
