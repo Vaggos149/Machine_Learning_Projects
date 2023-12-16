@@ -1,11 +1,6 @@
-import pandas as pd
-import numpy as np
-import nltk
-import sklearn
-import tensorflow as tf
 import matplotlib.pyplot as plt
 import seaborn as sns
-from pragmatic_play.data_objects import TestingObject
+from pragmatic_play.lib.data_objects import TestingObject
 
 mode = "test"
 testing_obj = TestingObject(mode=mode)
