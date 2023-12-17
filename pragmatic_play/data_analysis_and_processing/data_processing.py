@@ -1,3 +1,6 @@
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder
+
 from pragmatic_play.lib.sources_sinks import IO
 
 mode = "test"
@@ -22,10 +25,17 @@ test_data['Fare'].fillna(train_data_median_fare, inplace=True)
 train_data.dropna(axis=0, subset=['Embarked'], inplace=True)
 test_data.dropna(axis=0, subset=['Embarked'], inplace=True)
 
-
 # drop Cabin from train and test
-train_data = train_data.drop('Cabin', axis=1)
-test_data = test_data.drop('Cabin', axis=1)
+train_data = train_data.drop(['Cabin', 'Name', 'Ticket', 'PassengerId'], axis=1)
+test_data = test_data.drop(['Cabin', 'Name', 'Ticket', 'PassengerId'], axis=1)
+
+# label encoding
+columns_to_transform = list(train_data.select_dtypes(include='object'))
+
+for column in columns_to_transform:
+    le = LabelEncoder()
+    train_data[column] = le.fit_transform(train_data[column])
+    test_data[column] = le.transform(test_data[column])
 
 # Save Results
 testing_obj.write_dataframe_to_csv(dataset=train_data, dataset_name="train_data_processed")

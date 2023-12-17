@@ -13,6 +13,7 @@ class IO:
     def __init__(self, mode):
         self.mode = mode
         self.main_sink = "D:/Machine_Learning_Projects/pragmatic_play/data_storage"
+        self.model_sink = "D:/Machine_Learning_Projects/pragmatic_play/data_models"
 
     @staticmethod
     def read_dataframe_from_csv(csv_path_to_read: str,
@@ -27,10 +28,5 @@ class IO:
 
         dataset.to_csv(self.main_sink + f'/{dataset_name}.csv')
 
-    def save_model(self,
-                   model,
-                   model_name: str):
-
-        pickle.dump(model, open(self.main_sink + f'/{model_name}', 'wb'))
 
 
