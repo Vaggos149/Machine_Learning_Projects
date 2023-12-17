@@ -51,5 +51,5 @@ class TitanicClassification:
     def save_model(self):
         pickle.dump(self.best_model, open(self.best_model_path, 'wb'))
 
-    def load_model(self):
-        loaded_model = pickle.load(open(filename, 'rb'))
+    def load_model(self, file_path):
+        loaded_model = pickle.load(open(file_path, 'rb'))
