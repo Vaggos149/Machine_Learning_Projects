@@ -31,7 +31,7 @@ class TitanicClassification:
         self.best_model_path = io_settings.model_sink
 
     def train_test_split(self):
-        self.x_train, self.y_train, self.x_val, self.y_val = train_test_split(self.train_data.drop(['Survived'], axis=1), self.train_data.Survived, test_size=0.33, random_state=42)
+        self.x_train, self.x_val, self.y_train, self.y_val = train_test_split(self.train_data.drop(['Survived'], axis=1), self.train_data.Survived, test_size=0.33, random_state=42)
 
         return self.x_train, self.y_train, self.x_val, self.y_val
 
@@ -47,9 +47,6 @@ class TitanicClassification:
 
         return cv_results
 
-    # def best_model_selections(self):
-    #     cv_results
-    #     pass
 
     def save_model(self):
         pickle.dump(self.best_model, open(self.best_model_path, 'wb'))

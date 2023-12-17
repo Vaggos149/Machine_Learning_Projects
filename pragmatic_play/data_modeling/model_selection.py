@@ -38,7 +38,8 @@ param_grid = param_grid = {"criterion": ["gini", "entropy"], "min_samples_leaf":
                            "n_estimators": [50, 100, 400, 700, 1000]
                            }
 
-param_classification = TitanicClassification(model=random_forest, train_data=train_data, test_data=test_data, io_settings=io_settings)
-x_train, y_train, x_val, y_val = param_classification.train_test_split()
+obj_classification = TitanicClassification(model=random_forest, train_data=train_data, test_data=test_data, io_settings=io_settings)
+x_train, y_train, x_val, y_val = obj_classification.train_test_split()
 
-param_classification.grid_search_model(param_grid=param_grid)
+best_score, best_params = obj_classification.grid_search_model(param_grid=param_grid)
+
