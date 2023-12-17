@@ -33,6 +33,8 @@ class TitanicClassification:
     def train_test_split(self):
         self.x_train, self.y_train, self.x_val, self.y_val = train_test_split(self.train_data.drop(['Survived'], axis=1), self.train_data.Survived, test_size=0.33, random_state=42)
 
+        return self.x_train, self.y_train, self.x_val, self.y_val
+
     def grid_search_model(self, param_grid):
         # give train data, perform cross validation and return best parameters and model type
         gs = GridSearchCV(estimator=self.model, param_grid=param_grid, scoring='accuracy', cv=3, n_jobs=-1)
