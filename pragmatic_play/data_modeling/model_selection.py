@@ -1,11 +1,5 @@
-import tensorflow as tf
-import keras
 import numpy as np
-from keras.layers import Dense
-from keras.models import Sequential
-from sklearn.model_selection import cross_validate, cross_val_score, GridSearchCV, train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 from pragmatic_play.lib.sources_sinks import IO
@@ -17,8 +11,6 @@ mode = "testing"
 # data processed reading
 
 io = IO(mode=mode)
-
-# model_engine = TitanicClassification()
 
 # input dataframes
 train_path_to_read = io.main_sink + '/train_data_processed.csv'
@@ -41,7 +33,7 @@ grid_dictionary = {random_forest: {"criterion": ["gini", "entropy"], "min_sample
                                   "n_estimators": [50, 100, 400, 700, 1000]
                                   },
 
-                    #adaboost: {},
+                    adaboost: {"n_estimators": [10, 20, 30, 50], "learning_rate": [0.1, 0.2, 0.3, 0.4, 0.5, 1.0]},
 
                     kneighbors: {"n_neighbors": list(np.arange(2, 10))}
 
