@@ -58,3 +58,4 @@ best_model_path = io_settings.model_sink
 best_model.fit(train_data.drop(['Survived'], axis=1), train_data.Survived)
 with open(best_model_path, 'wb') as f:
     pickle.dump(object, f)
+
