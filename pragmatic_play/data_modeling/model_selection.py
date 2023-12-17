@@ -18,7 +18,6 @@ mode = "testing"
 
 io = IO(mode=mode)
 
-
 # model_engine = TitanicClassification()
 
 # input dataframes
@@ -30,11 +29,13 @@ test_data = io.read_dataframe_from_csv(csv_path_to_read=test_path_to_read)
 
 y_train_data = train_data.Survived
 x_train_data = train_data.drop(['Survived'], axis=1)
+io_settings = IO(mode="test")
+# Classification
 
+# random forest classifier
+random_forest = RandomForestClassifier()
+param_grid = param_grid = {"criterion": ["gini", "entropy"], "min_samples_leaf": [1, 5, 10], "min_samples_split": [2, 4, 10, 12, 16],
+                           "n_estimators": [50, 100, 400, 700, 1000]
+                           }
 
-X_train, X_test, y_train, y_test = train_test_split(x_train_data, y_train_data, test_size=0.33, random_state=42)
-
-
-param_grid = {'n_neighbors': np.arange(1,10)}
-knn_temp = KNeighborsClassifier()
-
+param_classification = TitanicClassification(model=random_forest, train_data=train_data, test_data=test_data, io_settings=io_settings)

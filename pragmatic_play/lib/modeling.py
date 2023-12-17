@@ -16,8 +16,10 @@ class TitanicClassification:
                  model: List[Union[RandomForestClassifier, AdaBoostClassifier, xgb.XGBClassifier]],
                  train_data: pd.DataFrame,
                  test_data: pd.DataFrame,
-                 io_settings: IO()
+                 io_settings: IO,
                  ):
+
+        self.io_settings = io_settings
         self.model = model
         self.train_data = train_data
         self.test_data = test_data
@@ -43,10 +45,9 @@ class TitanicClassification:
 
         return cv_results
 
-    def best_model_selections(self):
-        # something based on cv
-        # self.best_model_=
-        pass
+    # def best_model_selections(self):
+    #     cv_results
+    #     pass
 
     def save_model(self):
         pickle.dump(self.best_model, open(self.best_model_path, 'wb'))
