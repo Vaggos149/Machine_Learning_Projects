@@ -1,3 +1,5 @@
+import pickle
+
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
@@ -46,3 +48,13 @@ for model_object, param_grid in grid_dictionary.items():
 
     best_score, best_params = obj_classification.grid_search_model(param_grid=param_grid)
     print(f'Classification {model_object}, "best_score": {best_score}, "best_params" : {best_params}')
+
+
+best_params = {'criterion': 'gini', 'min_samples_leaf': 1, 'min_samples_split': 4, 'n_estimators': 50}
+best_model = RandomForestClassifier(max_features='auto', oob_score=True, random_state=42, n_jobs=-1,
+                                    criterion='gini',min_samples_leaf= 1, min_samples_split= 4, n_estimators= 50)
+
+best_model_path = io_settings.model_sink
+best_model.fit(train_data.drop(['Survived'], axis=1), train_data.Survived)
+with open(best_model_path, 'wb') as f:
+    pickle.dump(object, f)

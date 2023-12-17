@@ -28,7 +28,7 @@ class TitanicClassification:
         self.x_val = None
         self.y_val = None
         self.gs_scoring_method = "f1"
-        self.best_model_path = io_settings.model_sink
+        self.best_model_path = io_settings.model_sink + '/best_model'
 
     def train_test_split(self):
         self.x_train, self.x_val, self.y_train, self.y_val = train_test_split(self.train_data.drop(['Survived'], axis=1), self.train_data.Survived, test_size=0.33, random_state=42)
