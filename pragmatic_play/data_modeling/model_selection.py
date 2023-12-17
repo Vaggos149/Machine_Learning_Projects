@@ -34,12 +34,22 @@ io_settings = IO(mode="test")
 
 # random forest classifier
 random_forest = RandomForestClassifier()
-param_grid = param_grid = {"criterion": ["gini", "entropy"], "min_samples_leaf": [1, 5, 10], "min_samples_split": [2, 4, 10, 12, 16],
-                           "n_estimators": [50, 100, 400, 700, 1000]
-                           }
+adaboost = AdaBoostClassifier()
+kneighbors = KNeighborsClassifier()
 
-obj_classification = TitanicClassification(model=random_forest, train_data=train_data, test_data=test_data, io_settings=io_settings)
-x_train, y_train, x_val, y_val = obj_classification.train_test_split()
+grid_dictionary = {random_forest: {"criterion": ["gini", "entropy"], "min_samples_leaf": [1, 5, 10], "min_samples_split": [2, 4, 10, 12, 16],
+                                  "n_estimators": [50, 100, 400, 700, 1000]
+                                  },
 
-best_score, best_params = obj_classification.grid_search_model(param_grid=param_grid)
+                    #adaboost: {},
 
+                    kneighbors: {"n_neighbors": list(np.arange(2, 10))}
+
+                    }
+
+for model_object, param_grid in grid_dictionary.items():
+    obj_classification = TitanicClassification(model=model_object, train_data=train_data, test_data=test_data, io_settings=io_settings)
+    x_train, y_train, x_val, y_val = obj_classification.train_test_split()
+
+    best_score, best_params = obj_classification.grid_search_model(param_grid=param_grid)
+    print(f'Classification {model_object}, "best_score": {best_score}, "best_params" : {best_params}')
