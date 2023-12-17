@@ -39,6 +39,7 @@ grid_dictionary = {random_forest: {"criterion": ["gini", "entropy"], "min_sample
 
                     }
 
+
 for model_object, param_grid in grid_dictionary.items():
     obj_classification = TitanicClassification(model=model_object, train_data=train_data, test_data=test_data, io_settings=io_settings)
     x_train, y_train, x_val, y_val = obj_classification.train_test_split()
