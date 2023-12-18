@@ -30,7 +30,7 @@ class TitanicClassification:
 
     def grid_search_model(self, param_grid):
         # give train data, perform cross validation and return best parameters and model type
-        gs = GridSearchCV(estimator=self.model, param_grid=param_grid, scoring='f1', cv=3, n_jobs=-1)
+        gs = GridSearchCV(estimator=self.model, param_grid=param_grid, scoring=self.gs_scoring_method, cv=3, n_jobs=-1)
         gs.fit(self.X, self.y)
 
         return gs.best_score_, gs.best_params_
