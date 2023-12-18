@@ -14,6 +14,7 @@ class IO:
         self.mode = mode
         self.main_sink = "D:/Machine_Learning_Projects/pragmatic_play/data_storage"
         self.model_sink = "D:/Machine_Learning_Projects/pragmatic_play/data_models"
+        self.best_model_path = self.model_sink + '/best_model.sav'
 
     @staticmethod
     def read_dataframe_from_csv(csv_path_to_read: str,

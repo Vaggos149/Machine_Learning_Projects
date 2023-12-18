@@ -10,7 +10,7 @@ import xgboost as xgb
 from pragmatic_play.lib.sources_sinks import IO
 
 
-class TitanicClassification:
+class TitanicClassificationEvaluation:
 
     def __init__(self,
                  model: List[Union[RandomForestClassifier, AdaBoostClassifier, xgb.XGBClassifier]],
@@ -23,28 +23,17 @@ class TitanicClassification:
         self.model = model
         self.train_data = train_data
         self.test_data = test_data
-        self.X = self.train_data.drop(['Survived'], axis=1)
-        self.y = self.train_data.Survived
         self.gs_scoring_method = "f1"
-        self.best_model_path = io_settings.model_sink + '/best_model'
 
     def grid_search_model(self, param_grid):
         # give train data, perform cross validation and return best parameters and model type
         gs = GridSearchCV(estimator=self.model, param_grid=param_grid, scoring=self.gs_scoring_method, cv=3, n_jobs=-1)
-        gs.fit(self.X, self.y)
+        gs.fit(self.train_data.drop(['Survived'], axis=1), self.train_data.Survived)
 
         return gs.best_score_, gs.best_params_
 
     def cross_validate_model(self):
-        cv_results = cross_validate(self.model, self.train_data, self.test_data)
+        cv_results = cross_validate(self.model, self.train_data.drop(['Survived'], axis=1), self.train_data.Survived)
 
         return cv_results
-
-    def save_model(self):
-        pickle.dump(self.best_model, open(self.best_model_path, 'wb'))
-
-    def load_model(self, file_path):
-        loaded_model = pickle.load(open(file_path, 'rb'))
-
-        return loaded_model
 
