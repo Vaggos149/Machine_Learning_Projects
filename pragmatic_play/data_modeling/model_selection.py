@@ -1,5 +1,5 @@
 import pickle
-
+import warnings
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
@@ -7,6 +7,10 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from pragmatic_play.lib.sources_sinks import IO
 from pragmatic_play.lib.modeling import TitanicClassificationEvaluation
 
+
+# warnings
+# temporarily ingores warnings
+warnings.filterwarnings("ignore")
 # settings
 mode = "testing"
 
@@ -47,7 +51,7 @@ for model_object, param_grid in grid_dictionary.items():
 
     best_score, best_params = obj_classification.grid_search_model(param_grid=param_grid)
     cv_results = obj_classification.cross_validate_model()
-    print(f'Classification {model_object}, "best_score": {best_score}, "best_params" : {best_params}')
+    print(f'Classification {model_object}, f"best_score of {obj_classification.gs_scoring_method}": {best_score}, "best_params" : {best_params}')
     print('Cross Validation mean f1: {}'.format(np.mean(cv_results['test_score'])))
     # cross validation
 
