@@ -9,3 +9,5 @@ print(type(array_of_x))
 
 
 print("for a new purpose, I am printing out this branch")
+print("This is a new commit")
+
