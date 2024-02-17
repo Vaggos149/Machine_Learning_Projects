@@ -37,3 +37,6 @@ for data_file in os.listdir(working_dir):
         df = pd.DataFrame(all_lines_complete, columns=["itemID", "userID", "rating", "date"])
         list_of_dataframes.append(df)
         print(f"Ended appending file: {data_file}")
+
+pd.concat(list_of_dataframes).to_csv(working_dir + '/dataframes_3_4.csv')
+print("Ending print")
