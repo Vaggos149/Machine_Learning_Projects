@@ -10,3 +10,5 @@ print("This is to have a new point of view in the commits")
 print("for a new purpose, I am printing out this branch")
 print("This is a new commit")
 
+print("commiting new in pushing print line")
+print("commiting new in pushing print line 2")
