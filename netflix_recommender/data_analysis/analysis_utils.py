@@ -1,7 +1,7 @@
 from itertools import groupby
 
 
-def split_list(lst, val):
+def split_list(listing, val):
     return [list(group) for k, group in
-            groupby(lst, lambda x: x == val) if not k]
+            groupby(listing, lambda x: x == val) if not k]
 
