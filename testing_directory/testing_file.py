@@ -12,3 +12,5 @@ print("This is a new commit")
 
 print("commiting new in pushing print line")
 print("commiting new in pushing print line 2")
+print("commiting new in pushing print line 3")
+print("commiting new in pushing print line 4")
