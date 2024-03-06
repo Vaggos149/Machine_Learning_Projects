@@ -1,6 +1,7 @@
 # Importing Packages
 import pandas as pd
 import pyodbc
+import numpy as np
 
 # Initializing connection with SQL Server Management Studio
 conn = pyodbc.connect('Driver={SQL Server};'
@@ -10,7 +11,10 @@ conn = pyodbc.connect('Driver={SQL Server};'
 
 # Creating a dataframe from the connected database and desired table
 df = pd.read_sql_query('SELECT * from dbo.Consumer_Complaints', conn)
-
+# provide numerical column
+df["numerical_column"] = np.random.normal(0, 1, size=len(df))
+# rounding column on first 3 digits
+df["numerical_column"] = df["numerical_column"].map(lambda x: round(x, 5))
 # Exploring data
 print(df.head())
 print(df.shape)
@@ -34,4 +38,14 @@ df_new.set_index(["complaint_id", "product_name"], inplace=True)
 # grabbing first 3 rows, keeps the first 3 rows as the index is reset.
 df_new.head()
 
+# Subsetting
+df[(df["product_name"] == "Prepaid card") | (df["product_name"] == "Other financial service")].loc[:, "product_name"].value_counts()
+
+# summary statistics
+print(df["numerical_column"].mean())
+print(df["numerical_column"].std())
+print(df["numerical_column"].var())
+print(df["numerical_column"].median())
+print(df["numerical_column"].sum())
+print(df["numerical_column"].quantile(0.5))
 
