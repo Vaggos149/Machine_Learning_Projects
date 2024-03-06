@@ -53,16 +53,15 @@ print(df["numerical_column"].quantile(0.5))
 df.describe()
 
 # drop_duplicates
-
+df.drop_duplicates(subset="product_name")
 # agg method
-
+df.numerical_column.agg([np.mean, np.std]).reset_index().rename(columns={"index": "statistic"})
 # proportions
-
+df.loc[:, ["numerical_column"]].value_counts(normalize=True)
 # pivot table
-
+df.pivot_table(values="numerical_column", index='product_name', columns="sub_product", aggfunc=np.mean, fill_value=0)
 # grouped summaries
 
 # subsetting and other methods
 
 # data visualization
-
