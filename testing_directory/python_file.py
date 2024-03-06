@@ -49,3 +49,20 @@ print(df["numerical_column"].median())
 print(df["numerical_column"].sum())
 print(df["numerical_column"].quantile(0.5))
 
+# describe method of dataframes
+df.describe()
+
+# drop_duplicates
+
+# agg method
+
+# proportions
+
+# pivot table
+
+# grouped summaries
+
+# subsetting and other methods
+
+# data visualization
+
